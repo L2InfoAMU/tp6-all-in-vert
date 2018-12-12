@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -91,29 +92,66 @@ public class Grid implements Iterable<Cell> {
 
     // TODO: Écrire une version correcte de cette méthode.
     private List<Cell> getNeighbours(int rowIndex, int columnIndex) {
-        return null;
+
+        List<Cell> neighbours = new ArrayList<Cell>();
+        for (int i = -1 ; i< 2 ; i = i+ 2){
+            for (int y = -1 ; y < 2 ; y++) {
+                neighbours.add(getCell(rowIndex + i, columnIndex+y));
+            }
+        }
+        neighbours.add(getCell(rowIndex,columnIndex-1));
+        neighbours.add(getCell(rowIndex,columnIndex+1));
+        return neighbours;
     }
 
     // TODO: Écrire une version correcte de cette méthode.
     private int countAliveNeighbours(int rowIndex, int columnIndex) {
-        return 0;
+        List<Cell> alive = getNeighbours(rowIndex,columnIndex);
+        int count = 0 ;
+        for (int i = 0 ; i<8 ; i++){
+            if(alive.get(i).isAlive())
+                count++;
+        }
+        return count;
     }
 
     // TODO: Écrire une version correcte de cette méthode.
     private CellState calculateNextState(int rowIndex, int columnIndex) {
-        return null;
+
+        if(getCell(rowIndex, columnIndex).isAlive()){
+            if(countAliveNeighbours(rowIndex, columnIndex)== 2 || countAliveNeighbours(rowIndex, columnIndex)== 3  )
+                return CellState.ALIVE;
+
+            else
+                return CellState.DEAD;
+
+        }
+        else {
+            if (countAliveNeighbours(rowIndex, columnIndex) == 3)
+                return CellState.ALIVE;
+            else
+                return CellState.DEAD;
+        }
     }
 
 
 
     // TODO: Écrire une version correcte de cette méthode.
     private CellState[][] calculateNextStates() {
+
         CellState[][] nextCellState = new CellState[getNumberOfRows()][getNumberOfColumns()];
+        for(int i = 0 ; i<getNumberOfRows(); i++){
+            for(int y = 0 ; y< getNumberOfColumns() ; y++){
+                nextCellState[i][y] = calculateNextState(i,y);
+
+            }
+        }
         return nextCellState;
     }
 
     // TODO: Écrire une version correcte de cette méthode.
     private void updateStates(CellState[][] nextState) {
+
 
     }
 
